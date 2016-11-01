@@ -7,7 +7,7 @@ EIF400 loriacarlos@gmail.com
 testParser(P) :-
     parse('../mini.8bit', P)
 .
-parse(File, Prog) :- 
+parse(File, Prog) :-
     tokenize(File, Tokens),
 	eightProgram(Prog, Tokens, [])
 .
@@ -74,5 +74,3 @@ operator(oper(O)) --> {member(O, ['+', '*', '-', '/']), !}
 .
 
 string_atom(S, A) :- atom_string(A, S).
-
-
