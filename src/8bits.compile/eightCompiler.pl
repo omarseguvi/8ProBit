@@ -10,7 +10,7 @@ compile(InPath, OutPath, Filename) :-
    format('*** Compiling :"~a" *** ~n', [PathInFile]),
    parse(PathInFile, P),
    atom_concat(OutPath, Filename, PathOutFile),
-   atom_concat(PathOutFile, '.js', JsOutFile),
+   atom_concat(PathOutFile, '.asm', JsOutFile),
    format('*** Writing   :"~a" *** ~n', [JsOutFile]),
    genCodeToFile(JsOutFile, P)
 .
@@ -22,7 +22,7 @@ compile(InPath, _, Filename) :-
 compile(Filename) :- compile('cases/', 'output/', Filename)
 .
 % Demo test case
-compile :- compile('mini.8bit')
+compile :- compile('helloWorld.8bit')
 .
 
 main :-

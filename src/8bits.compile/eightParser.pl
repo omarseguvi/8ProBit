@@ -5,7 +5,7 @@ EIF400 loriacarlos@gmail.com
 :- [eightLexer]
 .
 testParser(P) :-
-    parse('../mini.8bit', P)
+    parse('../helloWorld.8bit', P)
 .
 parse(File, Prog) :-
     tokenize(File, Tokens),

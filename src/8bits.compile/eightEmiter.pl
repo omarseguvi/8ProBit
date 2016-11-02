@@ -18,19 +18,23 @@ genCodeToFile(File, P) :-
 .
 genCode(P) :- genCode(user_output, P)
 .
-genCode(Out, eightProg(L)) :- !, genCodeList(Out, L)
+genCode(Out, eightProg(L)) :- !,
+                              format(Out,'.init: \n',[]),
+                              format(Out,'\tMOV D, 232\n',[]),
+                              format(Out,'\tJMP main\n',[]),
+                              genCodeList(Out, L)
 .
 genCode(Out, fun(N, F, B)) :- !,
     genCode(Out, N),
     format(Out,': \n',[]),
-	genCode(Out,N,F),
-	genCode(Out, B)
+	  genCode(Out,N,F),
+	  genCode(Out, B)
 .
 genCode(Out, N, formals(L)) :- !,
      genCode(Out, N),
      format(Out, '(', []),
      genCodeList(Out, L, ', '),
-	 format(Out, ')', [])
+	   format(Out, ')', [])
 .
 genCode(Out, body(L)) :- !,
    format(Out, '{', []),
