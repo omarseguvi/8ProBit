@@ -1,4 +1,4 @@
 fun main(){
-	a = "Hello World!";
+	print_string("Hello World!");
 
 }

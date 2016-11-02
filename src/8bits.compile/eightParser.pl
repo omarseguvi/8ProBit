@@ -1,7 +1,7 @@
 /*
 EIF400 loriacarlos@gmail.com
 */
-
+:- dynamic table/2.
 :- [eightLexer]
 .
 testParser(P) :-
@@ -41,17 +41,24 @@ body([S | L]) --> statement(S), body(L)
 
 statement(empty) --> [;]
 .
+%statement(S) --> callStatement(S)
+%.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
-statement(S) --> callStatement(S)
+statement(S) --> letStatement(S)
+.
+
+letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
 .
 
 returnStatement(return(E)) --> [return], expression(E)
 .
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
+%callStatement(call(X,formals(F)) --> id(X)
+%.
 
 expression(E) --> addExpression(E).
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}

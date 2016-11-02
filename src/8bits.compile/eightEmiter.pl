@@ -27,11 +27,10 @@ genCode(Out, eightProg(L)) :- !,
 genCode(Out, fun(N, F, B)) :- !,
     genCode(Out, N),
     format(Out,': \n',[]),
-	  genCode(Out,N,F),
+	  genCode(Out,F),
 	  genCode(Out, B)
 .
-genCode(Out, N, formals(L)) :- !,
-     genCode(Out, N),
+genCode(Out, formals(L)) :- !,
      format(Out, '(', []),
      genCodeList(Out, L, ', '),
 	   format(Out, ')', [])
