@@ -8,3 +8,5 @@ Por el momento se ve que el que hace la gramatica es el Lexer.
 
 En el main se llama al compile y se le pasa el primer elemento de los args... despues hacer un parse y llena P con el recorrido
 metodo que esta en el parser. :D esto lo dijo andrey...
+
+genCodeToFile es el que inicia todo para recorrer e imprimir el segundo arbol
