@@ -29,7 +29,7 @@ formals(L) --> ['('], idList(L), [')']
 
 idList([]), [')'] --> [')']
 .
-idList([I])   --> id(I), idList([])
+idList([I])  --> id(I), idList([])
 .
 idList([I, J | L]) --> id(I), [','], id(J), idList(L)
 .
@@ -45,8 +45,8 @@ statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
-
-
+statement(S) --> callStatement(S)
+.
 
 returnStatement(return(E)) --> [return], expression(E)
 .
