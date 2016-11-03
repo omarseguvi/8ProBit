@@ -2,7 +2,7 @@
 EIF400 loriacarlos@gmail.com
 */
 
-getTokens(Input, Tokens) :- extractTokens(Input, ExTokens), 
+getTokens(Input, Tokens) :- extractTokens(Input, ExTokens),
                             delete(ExTokens, [], Tokens)
 .
 extractTokens([], []) :- !.
@@ -11,7 +11,7 @@ extractTokens(Input, [Token | Tokens]) :-       skipWhiteSpace(Input, InputNWS),
 											    extractTokens(Rest, Tokens)
 .
 % Skip White Space
-skipWhiteSpace([C | Input], Output) :- isWhiteSpace(C), !, 
+skipWhiteSpace([C | Input], Output) :- isWhiteSpace(C), !,
                                        skipWhiteSpace(Input, Output)
 .
 skipWhiteSpace(Input, Input)
@@ -34,8 +34,8 @@ startOneToken([C | Input], Partial, Token, Rest) :- isOper(C), !,
 startOneToken([C | Input], Partial, Token, Rest) :- isQuote(C), !,
                                                     finishQuote(Input, [ C | Partial], Token, Rest)
 .
-startOneToken([C | _] , _, _, _) :- atom_codes(AC, [34, C, 34]), 
-                                    atom_concat(AC, ' :invalid symbol found', Msg), 
+startOneToken([C | _] , _, _, _) :- atom_codes(AC, [34, C, 34]),
+                                    atom_concat(AC, ' :invalid symbol found', Msg),
 									throw(Msg)
 .
 % NUMBER
@@ -45,24 +45,24 @@ finishId(Input, Partial, Token, Rest) :- finishToken(Input, isLetter, Partial, T
 .
 % QUOTE
 finishQuote([C | Input], Partial, Token, Input) :- isQuote(C), !,
-                                                   convertToAtom([C | Partial], Token) 
+                                                   convertToAtom([C | Partial], Token)
 .
 finishQuote([C | Input], Partial, Token, Rest) :- finishQuote(Input, [C |Partial], Token, Rest)
 .
-finishQuote([] , _Partial, _Token, _Input) :- throw('opened and not closed string') 
+finishQuote([] , _Partial, _Token, _Input) :- throw('opened and not closed string')
 .
 % OPER
-finishOper([C | Input], [PC | Partial], Token, Input) :- doubleOper(PC, C), !, 
-                                                         convertToAtom([C, PC | Partial], Token) 
+finishOper([C | Input], [PC | Partial], Token, Input) :- doubleOper(PC, C), !,
+                                                         convertToAtom([C, PC | Partial], Token)
 .
-finishOper(Input, Partial, Token, Input) :- convertToAtom(Partial, Token) 
+finishOper(Input, Partial, Token, Input) :- convertToAtom(Partial, Token)
 .
 % TOKEN
-finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !, 
+finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !,
                                                             finishToken(Input, Continue, [ C | Partial], Token, Rest)
 .
 
-finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token) 
+finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token)
 .
 
 
@@ -84,7 +84,7 @@ doubleOper(61, 61). % ==
 doubleOper(60, 61). % <=
 doubleOper(62, 61). % >=
 
-convertToAtom(Partial, Token) :- reverse(Partial, TokenCodes), 
+convertToAtom(Partial, Token) :- reverse(Partial, TokenCodes),
                                  atom_codes(Token, TokenCodes)
 .
 
@@ -94,4 +94,4 @@ tokenize(File, Tokens) :- open(File, read, Stream),
                           getTokens(Input, Tokens)
 .
 
-testLexer(L) :- tokenize('../cases/test.8bit', L).
+testLexer(L) :- tokenize('../cases/helloWorld.8bit', L).

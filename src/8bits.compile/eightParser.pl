@@ -52,6 +52,8 @@ returnStatement(return(E)) --> [return], expression(E)
 .
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
+callStatement(print(F,R)) --> id(F), expression(R)
+.
 
 expression(E) --> addExpression(E).
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}

@@ -27,7 +27,7 @@ genCode(Out, eightProg(L)) :- !,
 genCode(Out, fun(N, F, B)) :- !,
     genCode(Out, N),
     format(Out,': \n',[]),
-	  genCode(Out,N,F),
+	/*  genCode(Out,N,F),   descomentar los formals luego*/
 	  genCode(Out, B)
 .
 genCode(Out, N, formals(L)) :- !,
@@ -37,9 +37,9 @@ genCode(Out, N, formals(L)) :- !,
 	   format(Out, ')', [])
 .
 genCode(Out, body(L)) :- !,
-   format(Out, '{', []),
-   genCodeList(Out, L, ' '),
-   format(Out, '}', [])
+  /* format(Out, '{', []),*/
+   genCodeList(Out, L, ' ')
+   /*format(Out, '}', [])*/
 .
 genCode(Out, atom(N)) :- !, format(Out, '~a ', [N])
 .
@@ -62,6 +62,28 @@ genCode(Out, assign(I, E)) :-  !,
 .
 genCode(Out, return(E)) :- !, format(Out, 'return ', []),
                               genCode(Out, E)
+.
+genCode(Out, print(E,R)) :- !,
+                            format(Out,'\n
+                            print_string:
+                              POP C
+                              POP B
+                              PUSH C
+                            .print_string_loop_01:
+                              MOV C, [B]
+                              CMP C, 0
+                              JE .print_string_exit
+                              MOV [D], C
+                              INC D
+                              INC B
+                              JMP .print_string_loop_01
+                            .print_string_exit:
+                              POP C
+                              PUSH .UNDEF
+                              PUSH C
+                              RET
+                            \n', []),
+                          genCode(Out,R)
 .
 genCode(_, E ) :- throw(E).
 
