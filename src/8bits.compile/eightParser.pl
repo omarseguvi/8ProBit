@@ -41,8 +41,8 @@ body([S | L]) --> statement(S), body(L)
 
 statement(empty) --> [;]
 .
-%statement(S) --> callStatement(S)
-%.
+statement(S) --> callStatement(S)
+.
 %statement(S) --> letStatement(S)
 %.
 statement(S) --> returnStatement(S)
@@ -61,6 +61,9 @@ assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 %callStatement(call(X,formals(F)) --> id(X)
 %.
 
+/* aqui deberia ir como un id en lugar de print*/
+callStatement(print(F,R)) --> id(F), expression(R)
+.
 expression(E) --> addExpression(E).
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}
 .
