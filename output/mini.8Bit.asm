@@ -2,4 +2,4 @@
 	MOV D, 232
 	JMP main
 hello : 
-(x , y ){return x  +  y  ; }
+(x , y ){a  =  x  +  1  ;  return x  +  y  ; }

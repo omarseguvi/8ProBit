@@ -43,15 +43,16 @@ statement(empty) --> [;]
 .
 %statement(S) --> callStatement(S)
 %.
+%statement(S) --> letStatement(S)
+%.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
-statement(S) --> letStatement(S)
-.
 
-letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
-.
+
+%letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
+%.
 
 returnStatement(return(E)) --> [return], expression(E)
 .
