@@ -52,6 +52,7 @@ returnStatement(return(E)) --> [return], expression(E)
 .
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
+/* aqui deberia ir como un id en lugar de print*/
 callStatement(print(F,R)) --> id(F), expression(R)
 .
 
