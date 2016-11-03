@@ -9,7 +9,7 @@ testParser(P) :-
 .
 parse(File, Prog) :-
     tokenize(File, Tokens),
-	eightProgram(Prog, Tokens, [])
+	eightProgram(Prog, Tokens, []) %no deben sobrar cosas el []
 .
 
 eightProgram(eightProg(FL)) --> eightFunList(FL)
@@ -43,16 +43,16 @@ statement(empty) --> [;]
 .
 statement(S) --> callStatement(S)
 .
-%statement(S) --> letStatement(S)
-%.
+statement(S) --> letStatement(S)
+.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
 
 
-%letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
-%.
+letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
+.
 
 returnStatement(return(E)) --> [return], expression(E)
 .
