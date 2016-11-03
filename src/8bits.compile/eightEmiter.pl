@@ -24,14 +24,13 @@ genCode(Out, eightProg(L)) :- !,
                               format(Out,'\tJMP main\n',[]),
                               genCodeList(Out, L)
 .
-genCode(Out, fun(N, F, B)) :- !,
+genCode(Out, fun(N, _, B)) :- !,
     genCode(Out, N),
     format(Out,': \n',[]),
 	/*  genCode(Out,N,F),   descomentar los formals luego*/
 	  genCode(Out, B)
 .
-genCode(Out, N, formals(L)) :- !,
-     genCode(Out, N),
+genCode(Out, formals(L)) :- !,
      format(Out, '(', []),
      genCodeList(Out, L, ', '),
 	   format(Out, ')', [])
@@ -63,7 +62,13 @@ genCode(Out, assign(I, E)) :-  !,
 genCode(Out, return(E)) :- !, format(Out, 'return ', []),
                               genCode(Out, E)
 .
-genCode(Out, print(E,R)) :- !,
+%genCode(Out, let(R)) :- !, format(Out, 'let',[]),
+%                           formar(Out,'{',[]),
+%                           genCode(R),
+%                           formar(Out,'{',[])
+%.
+
+genCode(Out, print(_,R)) :- !,
                             format(Out,'\n
                             print_string:
                               POP C

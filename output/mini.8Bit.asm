@@ -2,4 +2,4 @@
 	MOV D, 232
 	JMP main
 hello : 
-hello (x , y ){a  =  x  +  y  ;  return 99  +  a  ; }
+a  =  x  +  1  ;  return x  +  y  ; 

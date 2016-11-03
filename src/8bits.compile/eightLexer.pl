@@ -76,8 +76,8 @@ isLetter(D)  :- D >=97, D =< 122, !. % a .. z
 isLetter(D)  :- D >= 65, D =< 90.    % A .. Z
 
 isQuote(34).
-isOper(O)    :- O >= 40, O =< 46, !.              % ( ) * + , - . /
-isOper(O)    :- member(O, [123, 124, 125, 33, 59, 61]), !. % { } ! ;
+isOper(O)    :- O >= 40, O =< 47, !.              % ( ) * + , - . /
+isOper(O)    :- member(O, [123, 124, 125, 60, 62, 33, 59, 61]), !. % { } ! > <;
 
 doubleOper(33, 61). % !=
 doubleOper(61, 61). % ==
