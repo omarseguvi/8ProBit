@@ -1,15 +1,15 @@
 /*
 EIF400 loriacarlos@gmail.com
 */
-:- dynamic table/2.
+
 :- [eightLexer]
 .
 testParser(P) :-
-    parse('../helloWorld.8bit', P)
+    parse('../mini.8bit', P)
 .
-parse(File, Prog) :-
+parse(File, Prog) :- 
     tokenize(File, Tokens),
-	eightProgram(Prog, Tokens, []) %no deben sobrar cosas el []
+	eightProgram(Prog, Tokens, [])
 .
 
 eightProgram(eightProg(FL)) --> eightFunList(FL)
@@ -29,7 +29,7 @@ formals(L) --> ['('], idList(L), [')']
 
 idList([]), [')'] --> [')']
 .
-idList([I])  --> id(I), idList([])
+idList([I])   --> id(I), idList([])
 .
 idList([I, J | L]) --> id(I), [','], id(J), idList(L)
 .
@@ -41,29 +41,18 @@ body([S | L]) --> statement(S), body(L)
 
 statement(empty) --> [;]
 .
-statement(S) --> callStatement(S)
-.
-statement(S) --> letStatement(S)
-.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
 
 
-letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
-.
 
 returnStatement(return(E)) --> [return], expression(E)
 .
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
-%callStatement(call(X,formals(F)) --> id(X)
-%.
 
-/* aqui deberia ir como un id en lugar de print*/
-callStatement(print(F,R)) --> id(F), expression(R)
-.
 expression(E) --> addExpression(E).
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}
 .
@@ -85,3 +74,5 @@ operator(oper(O)) --> {member(O, ['+', '*', '-', '/']), !}
 .
 
 string_atom(S, A) :- atom_string(A, S).
+
+

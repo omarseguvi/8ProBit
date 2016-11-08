@@ -4,6 +4,8 @@ EIF400 loriacarlos@gmail.com
 
 :- [eightEmiter].
 
+:- [eightVisit].
+
 compile(InPath, OutPath, Filename) :-
    atom_concat(InPath, Filename, PathInFile),
    exists_file(PathInFile), !,
@@ -12,7 +14,9 @@ compile(InPath, OutPath, Filename) :-
    atom_concat(OutPath, Filename, PathOutFile),
    atom_concat(PathOutFile, '.asm', JsOutFile),
    format('*** Writing   :"~a" *** ~n', [JsOutFile]),
-   genCodeToFile(JsOutFile, P)
+   visit(P , Z),
+   %writeln(P),
+   genCodeToFile(JsOutFile, Z)
 .
 compile(InPath, _, Filename) :-
    atom_concat(InPath, Filename, PathInFile),

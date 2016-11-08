@@ -1,5 +1,31 @@
 .init: 
 	MOV D, 232
 	JMP main
-hello : 
-a  =  x  +  1  ;  return x  +  y  ; 
+
+
+	print_string:
+		POP C
+		POP B
+		PUSH C
+	.print_string_loop_01:
+		MOV C, [B]
+		CMP C, 0
+		JE .print_string_exit
+		MOV [D], C
+		INC D
+		INC B
+		JMP .print_string_loop_01
+	.print_string_exit:
+		POP C
+		PUSH .UNDEF
+		PUSH C
+		RET
+                            
+
+hello_data: 
+	x: DB 0; 
+	y: DB 0; 
+cat_data: 
+	a: DB 0; 
+hello: 
+cat:
