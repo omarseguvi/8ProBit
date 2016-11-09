@@ -1,4 +1,4 @@
-fun hello(x, y){
-   a = x + 1;
-  return x+y;
+fun main(){
+	a = 4;
+   print_string("asdas");
 }
