@@ -26,7 +26,7 @@ genCode(Out, eightProg(L)) :- !,
 							genCodePrint(Out),
 							genCodeList(Out, L)
 .
-
+/*
 %cambio
 genCode(Out, fun(N,F,B)) :- !,
     %format(Out, 'function ', []),
@@ -53,7 +53,7 @@ genCode(Out, id(N)) :- !, genCode(Out, atom(N))
 genCode(Out, num(N)) :- !, genCode(Out, atom(N))
 .
 genCode(Out, oper(N)) :- !, genCode(Out, atom(N))
-.
+.*/
 
 %ams instruction ---------------------------------------
 genCode(Out,asmins(N)) :- !,format(Out, '\n\t~a ;', [N])
@@ -72,7 +72,7 @@ genCode(Out, vardecla(N)) :- !,format(Out, '\n\t~a: DB 0;', [N])
 .
 
 %-------------------------------------------------------
-
+/*
 genCode(Out, operation(O, L, R)) :- !,
     genCodeList(Out, [L, O, R])
 	
@@ -94,6 +94,7 @@ genCode(Out, amsList(L)) :-  !,
 genCode(Out, return(E)) :- !, format(Out, 'return ', []),
                               genCode(Out, E)
 .
+*/
 genCode(_, E ) :- throw(E).
 
 genCodeList(Out, L) :- genCodeList(Out, L, ' ')

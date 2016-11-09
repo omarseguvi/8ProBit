@@ -9,12 +9,12 @@ visit(eightProg(FL), eightProg(P)) :- !, visitList(FL, Data, Code)
 .
 
 							
-visit(fun(I, F, _), Data, Code) :- 	!, visit(funid, I, Code1)
+visit(fun(I, F, B), Data, Code) :- 	!, visit(funid, I, Code1)
 									,visit(funData, I, Data1)
 									,visit(F, Data2, _)
-									%,visit(B, Data3, Code2)
-									,append([Data1,Data2 ],Data)
-									,append(Code1,[],Code) 
+									,visit(B, Data3, Code2)
+									,append([Data1,Data2 ,Data3],Data)
+									,append(Code1,Code2,Code) 
 .
 
 visit(funData, id(X), Data) :- !, concat(X,'_data', Z)
@@ -27,12 +27,19 @@ visit(funid, id(X), Code) :- !, Code = [tag(X)]
 visit(formals(L), Data, _ ) :- !, maplist(visitformal, L , Data)
 .
 
+visit(body(X), Data, Code) :- writeln('body')
+.
 
+visit(_, _, _).
+ 
+
+visitformal(body(X), Data, Code) :- !,  visitList(X, Data, Code) 
+.
 
 visitformal(id(X), vardecla(X))
 .
 
- 
+
 
 visitList([], _, _).
 visitList( [C], Data, Code) :- visit(C, Data, Code).
