@@ -62,11 +62,18 @@ genCode(Out, assign(I, E)) :-  !,
 genCode(Out, return(E)) :- !, format(Out, 'return ', []),
                               genCode(Out, E)
 .
-%genCode(Out, let(R)) :- !, format(Out, 'let',[]),
-%                           formar(Out,'{',[]),
-%                           genCode(R),
-%                           formar(Out,'{',[])
-%.
+/*genCode(Out, let(R)) :- !, format(Out, 'let',[]),
+                           formar(Out,'{',[]),
+                           genCodeList(R),
+                           formar(Out,'{',[])
+.*/
+
+genCode(Out,cll(S,R)) :- !,
+                         genCode(Out, S),
+                         format(Out,'(',[]),
+                         genCodeList(Out, R, ','),
+                         format(Out, ')',[])
+.
 
 genCode(Out, print(_,R)) :- !,
                             format(Out,'\n

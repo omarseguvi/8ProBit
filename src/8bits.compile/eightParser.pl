@@ -43,28 +43,41 @@ statement(empty) --> [;]
 .
 statement(S) --> callStatement(S)
 .
-statement(S) --> letStatement(S)
-.
+%statement(S) --> letStatement(S)
+%.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
 
 
-letStatement(let(R)) --> [let], ['{'], assignStatement(R) ,['}']
+/*letStatement(let(S)) --> ['let'], ['{'], assignStatementList(S), ['}']
 .
+assignStatementList([]), ['}'] --> ['}']
+.
+assignStatementList([I]) --> assignStatement(I) , assignStatement([])
+.
+assignStatementList([I, J | L]) --> assignStatement(I), [';'], assignStatement(J), assignStatementList(L)
+.*/
 
 returnStatement(return(E)) --> [return], expression(E)
 .
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
-%callStatement(call(X,formals(F)) --> id(X)
-%.
-
-/* aqui deberia ir como un id en lugar de print*/
-callStatement(print(F,R)) --> id(F), expression(R)
+/*Regla para callStatement*/
+callStatement(cll(X,S)) --> id(X), args(S)
 .
-expression(E) --> addExpression(E).
+args(S) --> ['('], argsList(S), [')']
+.
+argsList([]), [')'] --> [')']
+.
+argsList([I]) --> expression(I), argsList([])
+.
+argsList([I, J | L]) --> expression(I), [','], expression(J), argsList(L)
+.
+
+expression(E) --> addExpression(E)
+.
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}
 .
 addExpression(M) --> mulExpression(M)

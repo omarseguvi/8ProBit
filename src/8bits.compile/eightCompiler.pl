@@ -9,6 +9,7 @@ compile(InPath, OutPath, Filename) :-
    exists_file(PathInFile), !,
    format('*** Compiling :"~a" *** ~n', [PathInFile]),
    parse(PathInFile, P),
+   writeln(P),
    atom_concat(OutPath, Filename, PathOutFile),
    atom_concat(PathOutFile, '.asm', JsOutFile),
    format('*** Writing   :"~a" *** ~n', [JsOutFile]),
