@@ -1,4 +1,4 @@
 fun main(){
-	 a = 2 + 3;
-	 b = 2 + 3;
+	print_string("Hello World!");
+
 }

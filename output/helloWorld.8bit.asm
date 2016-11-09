@@ -24,19 +24,4 @@
 
 main_data: 
 main: 
-	PUSH 2; 
-	PUSH 3; 
-	POP B; 
-	POP A; 
-	ADD A , B; 
-	PUSH A; 
-	POP A; 
-	MOV a , A; 
-	PUSH 2; 
-	PUSH 3; 
-	POP B; 
-	POP A; 
-	ADD A , B; 
-	PUSH A; 
-	POP A; 
-	MOV b , A;
+	PUSH "Hello World!"; 

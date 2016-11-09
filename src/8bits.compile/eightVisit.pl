@@ -15,8 +15,9 @@ insert_value(V):- fun_actual(F), atom_concat(F,'_',R),
 								  atom_concat(R1,':',R2),
 								  atom_concat(R2,' DB 0;',R3),
 								  insert_simbol(F,V,R3).
+
 /*Es solo de prueba */
-                  
+
 show_data :- findall(E,simbol(_,_,E),L), forall((member(X,L)),(write(X),nl)).
 
 visit(eightProg(FL), eightProg(P)) :- !,delete_all ,visitList(FL, Data, Code)
@@ -50,6 +51,13 @@ visit(assign(L, R), Data, Code) :- !, visit(R, _, Code1)
 									,append(Code1,Code2,Code)
 .
 
+visit(cll(I,L) ,Data, Code) :- !, visitList(L,Data,Code1),
+                                 visit(cll,I,Code2),
+                                 append(Code1,Code2,Code)
+.
+
+visit(cll,id(X),Code):- Code = [asmis('CALL', X)]
+.
 visit(assing, id(X), Code) :-  Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
 .
 
@@ -81,6 +89,12 @@ visit(+, _, Code) :- Code = [asmins('ADD','A','B'),asmins('PUSH','A')]
 .
 
 visit(*, _, Code) :- Code = [asmins('MUL','A'),asmins('PUSH','A')]
+.
+
+visit(-, _, Code) :- Code = [asmins('SUB','A','B'),asmins('PUSH','A')]
+.
+
+visit('/', _, Code) :- Code = [asmins('DIV','A'),asmins('PUSH','A')]
 .
 
 visit(empty, _, _)
