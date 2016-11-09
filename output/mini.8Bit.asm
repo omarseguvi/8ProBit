@@ -3,6 +3,15 @@
 	JMP main;
 	.UNDEF: DB 255;
 
+main_data: 
+	main_String0: DB "asdas"; 
+	 DB 0; 
+main: 
+	PUSH 4; 
+	POP A; 
+	MOV a , A; 
+	PUSH main_String0; 
+	CALL print_string;
 
 	print_string:
 		POP C
@@ -22,11 +31,3 @@
 		PUSH C
 		RET
                             
-
-main_data: 
-main: 
-	PUSH 4; 
-	POP A; 
-	MOV a , A; 
-	PUSH main_String0; 
-	CALL print_string;

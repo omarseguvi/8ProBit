@@ -1,37 +1,22 @@
 dynamic simbol/3.
-dynamic simbolS/3.
-/*SimbolS --> Simnbols de String*/
-dynamic cont/1.
 dynamic fun_actual/1.
 
 :-['eightParser']
 .
 
-delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)),retractall(simbolS(_,_,_)).
+delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)).
 
 insert_funActual(N):-  retractall(fun_actual(_)), assert(fun_actual(N)).
 
 insert_simbol(F,V,R):- assert(simbol(F,V,R)).
 
-insert_simbolS(F,V,R):- assert(simbol(F,V,R)).
-
 insert_value(V):- fun_actual(F), atom_concat(F,'_',R),
 								  atom_concat(R,V,R1),
-								  insert_simbol(F,V,R1).
-
-insert_string(V):- fun_actual(F), atom_concat(F,'_',R),
-								  atom_concat(R,'string1',R1), % el uno es mientras tanto
-								  atom_concat(R1,':',R2),
-                  atom_concat(R2,'DB ',R3),
-                  atom_concat(R3,V,R4),
-								  atom_concat(R4,' DB 0;',R5),
-								  insert_simbolS(F,V,R5).
-
+								  insert_simbol(F,V,R1)
+.
+/*get_id(V+,X-)*/
 get_id(V,X):- fun_actual(F), simbol(F,V,X).
-get_id(V,X):- fun_actual(F), simbolS(F,V,X).
-
 /*Es solo de prueba */
-
 show_data :- findall(E,simbol(_,_,E),L), forall((member(X,L)),(write(X),nl)).
 
 /*aquie se coloca una varialbe global para llevar conteo de strings. sc-> string counter*/
@@ -53,7 +38,7 @@ visit(fun(I, F, B), Data, Code) :- 	!, visit(funid, I, Code1)
 .
 
 visit(funData, id(X), Data) :- !, concat(X,'_data', Z)
-							   ,Data = [tag(Z)]
+							   								 ,Data = [tag(Z)]
 .
 
 visit(funid, id(X), Code) :- !, Code = [tag(X)], insert_funActual(X)
@@ -131,7 +116,7 @@ visit(empty, _, _)
 visit(C,_, Code):- concat('--->',C,Y), Code = [tag(Y)]
 .
 
-visitformal(id(X), vardecla(X)) :- insert_value(X)
+visitformal(id(X), vardecla(Z)) :- insert_value(X), get_id(X,Z)
 .
 
 visitList([], _, _).

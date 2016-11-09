@@ -4,6 +4,8 @@
 	.UNDEF: DB 255;
 
 main_data: 
+	main_x: DB 0; 
+	main_y: DB 0; 
 	main_String0: DB "Hello World!"; 
 	 DB 0; 
 main: 
