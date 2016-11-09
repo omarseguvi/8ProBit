@@ -8,9 +8,17 @@ main_data:
 	main_y: DB 0; 
 	main_String0: DB "Hello World!"; 
 	 DB 0; 
+add_data: 
+	add_x: DB 0; 
+	add_b: DB 0; 
+	add_String1: DB "caca"; 
+	 DB 0; 
 main: 
 	PUSH main_String0; 
-	CALL print_string;
+	CALL print_string; 
+add: 
+	PUSH add_String1; 
+	CALL print;
 
 	print_string:
 		POP C

@@ -63,7 +63,8 @@ visit(id(X), _, Code):- Code = [asmins('PUSH', X)]
 
 visit(str(X), Data, Code):- stringCounter(C)
 							% funActual(FA)  aquie debe de ir el predicado para obetern nombre de funcion actual
-							,concat('main', '_String', N)
+							, fun_actual(FA)
+							,concat(FA, '_String', N)
 							,concat(N, C, Z)
 							, Data = [stringdecla(Z, X)]
 							, Code = [asmins('PUSH',Z)]

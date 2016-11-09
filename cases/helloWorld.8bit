@@ -1,3 +1,6 @@
 fun main(x,y){
 	print_string("Hello World!");
 }
+fun add(x,b){
+ print("caca");
+}
