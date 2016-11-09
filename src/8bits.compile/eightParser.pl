@@ -41,30 +41,29 @@ body([S | L]) --> statement(S), body(L)
 
 statement(empty) --> [;]
 .
+statement(S) --> letStatement(S), !
+.
 statement(S) --> callStatement(S)
 .
-%statement(S) --> letStatement(S)
-%.
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
 .
 
-
-/*letStatement(let(S)) --> ['let'], ['{'], assignStatementList(S), ['}']
+/*Regla para el let*/
+letStatement(let(S)) --> [let], ['{'], assignStatementList(S),['}']
 .
 assignStatementList([]), ['}'] --> ['}']
 .
-assignStatementList([I]) --> assignStatement(I) , assignStatement([])
+assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 .
-assignStatementList([I, J | L]) --> assignStatement(I), [';'], assignStatement(J), assignStatementList(L)
-.*/
-
+/*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
 .
+/*Regla para la assignacion*/
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .
-/*Regla para callStatement*/
+/*Regla para la llamada de funciones */
 callStatement(cll(X,S)) --> id(X), args(S)
 .
 args(S) --> ['('], argsList(S), [')']

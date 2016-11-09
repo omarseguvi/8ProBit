@@ -1,3 +1,8 @@
 fun main(){
+	let{
+	 a = 5;
+	 b = 6;
+	 c = 7;
+	}
 	print("Hola_Mundo!!!");
 }

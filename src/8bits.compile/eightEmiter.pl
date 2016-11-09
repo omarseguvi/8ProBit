@@ -62,11 +62,11 @@ genCode(Out, assign(I, E)) :-  !,
 genCode(Out, return(E)) :- !, format(Out, 'return ', []),
                               genCode(Out, E)
 .
-/*genCode(Out, let(R)) :- !, format(Out, 'let',[]),
+genCode(Out, let(R)) :- !, format(Out, 'let',[]),
                            formar(Out,'{',[]),
-                           genCodeList(R),
-                           formar(Out,'{',[])
-.*/
+                           genCode(Out, R),
+                           formar(Out,'}',[])
+.
 
 genCode(Out,cll(S,R)) :- !,
                          genCode(Out, S),
@@ -75,28 +75,6 @@ genCode(Out,cll(S,R)) :- !,
                          format(Out, ')',[])
 .
 
-genCode(Out, print(_,R)) :- !,
-                            format(Out,'\n
-                            print_string:
-                              POP C
-                              POP B
-                              PUSH C
-                            .print_string_loop_01:
-                              MOV C, [B]
-                              CMP C, 0
-                              JE .print_string_exit
-                              MOV [D], C
-                              INC D
-                              INC B
-                              JMP .print_string_loop_01
-                            .print_string_exit:
-                              POP C
-                              PUSH .UNDEF
-                              PUSH C
-                              RET
-                            \n', []),
-                          genCode(Out,R)
-.
 genCode(_, E ) :- throw(E).
 
 genCodeList(Out, L) :- genCodeList(Out, L, ' ')
