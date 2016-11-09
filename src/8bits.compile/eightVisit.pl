@@ -17,12 +17,10 @@ insert_simbolS(F,V,R):- assert(simbol(F,V,R)).
 
 insert_value(V):- fun_actual(F), atom_concat(F,'_',R),
 								  atom_concat(R,V,R1),
-								  atom_concat(R1,':',R2),
-								  atom_concat(R2,' DB 0;',R3),
-								  insert_simbol(F,V,R3).
+								  insert_simbol(F,V,R1).
 
 insert_string(V):- fun_actual(F), atom_concat(F,'_',R),
-								  atom_concat(R,'string1',R1),
+								  atom_concat(R,'string1',R1), % el uno es mientras tanto
 								  atom_concat(R1,':',R2),
                   atom_concat(R2,'DB ',R3),
                   atom_concat(R3,V,R4),
