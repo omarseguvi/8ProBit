@@ -28,7 +28,8 @@ genCode(Out, eightProg(L)) :- !,
 .
 /*
 %cambio
-genCode(Out, fun(N,F,B)) :- !,
+genCode(Out, fun(N,F,B)) :- !,    (main,a,main_a: DB 0;)            (hello,b,hello_b: DB 0;)
+    insert_funActual(N)),
     %format(Out, 'function ', []),
     genCode(Out, N),
 	format(Out, ':', []),
@@ -37,6 +38,7 @@ genCode(Out, fun(N,F,B)) :- !,
 .
 genCode(Out, formals(L)) :- !,
      format(Out, '(', []),
+     insert_value(L),
      genCodeList(Out, L, ', '),
 	 format(Out, ')', [])
 .
