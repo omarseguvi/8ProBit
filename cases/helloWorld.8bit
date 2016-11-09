@@ -1,8 +1,6 @@
 fun main(){
-	let{
-	 a = 5;
-	 b = 6;
-	 c = 7;
+	if( 1 + 2){
+	 print("Hola_Mundo!!!");
 	}
-	print("Hola_Mundo!!!");
+	print("Paso despues del if");
 }
