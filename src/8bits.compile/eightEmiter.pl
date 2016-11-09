@@ -21,8 +21,9 @@ genCode(P) :- genCode(user_output, P)
 .
 genCode(Out, eightProg(L)) :- !,
 							format(Out,'.init: \n',[]),
-                            format(Out,'\tMOV D, 232\n',[]),
-                            format(Out,'\tJMP main\n',[]),
+                            format(Out,'\tMOV D, 232;\n',[]),
+                            format(Out,'\tJMP main;\n',[]),
+							format(Out,'\t.UNDEF: DB 255;\n',[]),
 							genCodePrint(Out),
 							genCodeList(Out, L)
 .
@@ -69,6 +70,9 @@ genCode(Out, tag(N)) :- !,format(Out, '\n~a:', [N])
 .
 
 genCode(Out, vardecla(N)) :- !,format(Out, '\n\t~a: DB 0;', [N])
+.
+
+genCode(Out, stringdecla(N, V)) :- !,format(Out, '\n\t~a: DB ~a; \n\t DB 0;', [N, V])
 .
 
 %-------------------------------------------------------
