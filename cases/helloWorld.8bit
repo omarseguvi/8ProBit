@@ -1,9 +1,7 @@
 fun main(){
-	if( 1 + 2){
-	 print("Paso el if");
-	}
-	else{
-		print("Paso en else");
+	while( 1 + 2){
+	 a = 2 + 3;
+	 print("while");
 	}
 
 }

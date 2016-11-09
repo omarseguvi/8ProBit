@@ -52,6 +52,8 @@ statement(S) --> assignStatement(S)
 .
 statement(S) --> ifStatement(S)
 .
+statement(S) --> whileStatement(S)
+.
 
 /*Regla para el let*/
 letStatement(let(S)) --> [let], ['{'], assignStatementList(S),['}']
@@ -59,6 +61,9 @@ letStatement(let(S)) --> [let], ['{'], assignStatementList(S),['}']
 assignStatementList([]), ['}'] --> ['}']
 .
 assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
+.
+/*Regla para el while*/
+whileStatement(while(cond(C),body(B))) --> [while],['('], expression(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if*/
 ifStatement(if(cond(C),body(B))) --> [if],['('], expression(C), [')'], ['{'], body(B), ['}']
