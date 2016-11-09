@@ -15,8 +15,8 @@ compile(InPath, OutPath, Filename) :-
    format('*** Writing   :"~a" *** ~n', [JsOutFile]),
    writeln(P),
    visit(P,Z),
-   writeln(Z)
-   %genCodeToFile(JsOutFile, Z)
+   writeln(Z),
+   genCodeToFile(JsOutFile, Z)
 .
 compile(InPath, _, Filename) :-
    atom_concat(InPath, Filename, PathInFile),

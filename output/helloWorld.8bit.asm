@@ -25,3 +25,4 @@
 main_data: 
 main: 
 	PUSH "Hello World!"; 
+	CALL print_string;

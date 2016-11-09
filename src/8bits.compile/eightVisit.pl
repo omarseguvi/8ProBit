@@ -51,12 +51,12 @@ visit(assign(L, R), Data, Code) :- !, visit(R, _, Code1)
 									,append(Code1,Code2,Code)
 .
 
-visit(cll(I,L) ,Data, Code) :- !, visitList(L,Data,Code1),
-                                 visit(cll,I,Code2),
+visit(cll(I,L) ,Data, Code) :- !, visitList(L,Data,Code1), write(Code1),
+                                 visit(cll,I,Code2), write(Code2),
                                  append(Code1,Code2,Code)
 .
 
-visit(cll,id(X),Code):- Code = [asmis('CALL', X)]
+visit(cll,id(X),Code):- Code = [asmins('CALL', X)]
 .
 visit(assing, id(X), Code) :-  Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
 .
