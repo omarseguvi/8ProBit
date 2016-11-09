@@ -4,6 +4,10 @@
 	.UNDEF: DB 255;
 
 main_data: 
+	main_ra: DB 0; 
+	main_x: DB 0; 
+	main_y: DB 0; 
+	main_a: DB 0; 
 	main_String0: DB "asdas"; 
 	 DB 0; 
 main: 

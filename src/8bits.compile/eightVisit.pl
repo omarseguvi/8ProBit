@@ -32,7 +32,7 @@ visit(fun(I, F, B), Data, Code) :- 	!, visit(funid, I, Code1)
 									,visit(funData, I, Data1)
 									,visit(F, Data2, _)
 									,visit(B, Data3, Code2)
-									,append([Data1,Data2 ,Data3],Data)
+									,append([Data1,Data2,Data3],Data)
 									,append(Code1,Code2,Code)
 									%,compleFun(I, Code3, Code)
 .
@@ -43,19 +43,24 @@ visit(funData, id(X), Data) :- !, concat(X,'_data', Z)
 
 visit(funid, id(X), Code) :- !, Code = [tag(X)], insert_funActual(X)
 .
-
-visit(formals(L), Data, _ ) :- !, maplist(visitformal, L , Data)
+/*Se agrega de una vez la variable de retorno de la funcion actual*/
+visit(formals(L), Data, _ ) :- !,insert_value(ra)
+																,get_id(ra,V)
+																,Data1 = [vardecla(V)]
+																,maplist(visitformal, L , Data2)
+																,append(Data1,Data2,Data)
 .
 
 visit(body(X), Data, Code) :- !,  visitList(X, Data, Code)
 .
 
-visit(assign(L, R), Data, Code) :- !, visit(R, Data, Code1)
-									, visit(assing, L,  Code2)
-									,append(Code1,Code2,Code)
+visit(assign(L, R), Data, Code) :- !,visit(R, Data1, Code1)
+																		,visit(assing, L, Data2 ,Code2)
+									                  ,append(Code1,Code2,Code)
+									                  ,append(Data1,Data2,Data)
 .
 
-visit(assing, id(X), Code) :-  Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
+visit(let(S), Data, Code) :- !, visitList(S,Data,Code)
 .
 
 visit(id(X), _, Code):- Code = [asmins('PUSH', X)]
@@ -126,6 +131,12 @@ visitList( [X, Y | L], Data, Code) :- visit(X, Data1, Code1)
 									  ,visitList([Y | L], Data2, Code2)
 									  ,append(Data1, Data2, Data)
 									  ,append(Code1, Code2, Code)
+.
+
+visit(assing, id(X), Data, Code) :- insert_value(X),
+																		get_id(X,V),
+																		Data = [vardecla(V)],
+														        Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
 .
 
 stringCounter(Z) :-  nb_getval(sc, Z)
