@@ -41,6 +41,7 @@ body([S | L]) --> statement(S), body(L)
 
 statement(empty) --> [;]
 .
+/*Se pone un cut porque solo una vez tiene que venir en cada función*/
 statement(S) --> letStatement(S), !
 .
 statement(S) --> callStatement(S)
@@ -48,6 +49,8 @@ statement(S) --> callStatement(S)
 statement(S) --> returnStatement(S)
 .
 statement(S) --> assignStatement(S)
+.
+statement(S) --> ifStatement(S)
 .
 
 /*Regla para el let*/
@@ -57,6 +60,8 @@ assignStatementList([]), ['}'] --> ['}']
 .
 assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 .
+/*Regla para el if*/
+
 /*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
 .
