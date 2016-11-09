@@ -28,4 +28,19 @@ hello_data:
 cat_data: 
 	a: DB 0; 
 hello: 
-cat:
+	PUSH x; 
+	PUSH 1; 
+	POP B; 
+	POP A; 
+	MUL A; 
+	PUSH A; 
+	POP A; 
+	MOV a , A; 
+	PUSH x; 
+	PUSH y; 
+	POP B; 
+	POP A; 
+	ADD A , B; 
+	PUSH A; 
+cat: 
+	PUSH 7;
