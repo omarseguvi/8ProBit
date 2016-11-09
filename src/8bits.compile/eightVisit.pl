@@ -1,10 +1,26 @@
+dynamic simbol/3.
+dynamic fun_actual/1.
+
 :-['eightParser']
 .
 
+delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)).
 
+insert_funActual(N):-  retractall(fun_actual(_)), assert(fun_actual(N)).
 
-visit(eightProg(FL), eightProg(P)) :- !, visitList(FL, Data, Code)
-									   , append(Data, Code, P)
+insert_simbol(F,V,R):- assert(simbol(F,V,R)).
+
+insert_value(V):- fun_actual(F), atom_concat(F,'_',R),
+								  atom_concat(R,V,R1),
+								  atom_concat(R1,':',R2),
+								  atom_concat(R2,' DB 0;',R3),
+								  insert_simbol(F,V,R3).
+/*Es solo de prueba */
+                  
+show_data :- findall(E,simbol(_,_,E),L), forall((member(X,L)),(write(X),nl)).
+
+visit(eightProg(FL), eightProg(P)) :- !,delete_all ,visitList(FL, Data, Code)
+									   , show_data, append(Data, Code, P)
 .
 
 
@@ -20,7 +36,7 @@ visit(funData, id(X), Data) :- !, concat(X,'_data', Z)
 							   ,Data = [tag(Z)]
 .
 
-visit(funid, id(X), Code) :- !, Code = [tag(X)]
+visit(funid, id(X), Code) :- !, Code = [tag(X)], insert_funActual(X)
 .
 
 visit(formals(L), Data, _ ) :- !, maplist(visitformal, L , Data)
@@ -74,7 +90,7 @@ visit(empty, _, _)
 visit(C,_, Code):- concat('--->',C,Y), Code = [tag(Y)]
 .
 
-visitformal(id(X), vardecla(X))
+visitformal(id(X), vardecla(X)) :- insert_value(X)
 .
 
 visitList([], _, _).
