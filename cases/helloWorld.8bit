@@ -1,7 +1,4 @@
 fun main(){
-	while( 1 + 2){
 	 a = 2 + 3;
-	 print("while");
-	}
-
+	 b = 2 + 3;
 }
