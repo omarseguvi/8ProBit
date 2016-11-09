@@ -25,8 +25,6 @@
 hello_data: 
 	x: DB 0; 
 	y: DB 0; 
-cat_data: 
-	a: DB 0; 
 hello: 
 	PUSH x; 
 	PUSH 1; 
@@ -41,6 +39,4 @@ hello:
 	POP B; 
 	POP A; 
 	ADD A , B; 
-	PUSH A; 
-cat: 
-	PUSH 7;
+	PUSH A;

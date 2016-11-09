@@ -2,5 +2,3 @@ fun hello(x, y){
    a = x * 1;
   return x+y;
 }
-
-fun cat(){ hello(1,2);}
