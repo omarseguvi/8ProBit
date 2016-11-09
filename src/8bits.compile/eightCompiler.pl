@@ -13,9 +13,9 @@ compile(InPath, OutPath, Filename) :-
    atom_concat(OutPath, Filename, PathOutFile),
    atom_concat(PathOutFile, '.asm', JsOutFile),
    format('*** Writing   :"~a" *** ~n', [JsOutFile]),
-   writeln(P),
-   visit(P,Z)
-   %genCodeToFile(JsOutFile, Z)
+   visit(P,Z),
+   writeln(Z),
+   genCodeToFile(JsOutFile, Z)
 .
 compile(InPath, _, Filename) :-
    atom_concat(InPath, Filename, PathInFile),

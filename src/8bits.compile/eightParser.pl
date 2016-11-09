@@ -21,8 +21,13 @@ eightFunList([F|R]) --> eightFunction(F), eightFunList(R)
 .
 eightFunction(fun(X, formals(F), body(B))) --> [fun], id(X), formals(F), ['{'], body(B), ['}']
 .
+
+id(str(X)) --> [X], {atomic(X), string_chars(X, ['"'|_])}
+.
+
 id(id(X)) --> [X], {atomic(X)}
 .
+
 
 formals(L) --> ['('], idList(L), [')']
 .

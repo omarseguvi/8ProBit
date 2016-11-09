@@ -21,10 +21,11 @@ genCode(P) :- genCode(user_output, P)
 .
 genCode(Out, eightProg(L)) :- !,
 							format(Out,'.init: \n',[]),
-                            format(Out,'\tMOV D, 232\n',[]),
-                            format(Out,'\tJMP main\n',[]),
-							genCodePrint(Out),
-							genCodeList(Out, L)
+              format(Out,'\tMOV D, 232;\n',[]),
+              format(Out,'\tJMP main;\n',[]),
+							format(Out,'\t.UNDEF: DB 255;\n',[]),
+							genCodeList(Out, L),
+              genCodePrint(Out)
 .
 /*
 %cambio
@@ -57,7 +58,7 @@ genCode(Out, num(N)) :- !, genCode(Out, atom(N))
 genCode(Out, oper(N)) :- !, genCode(Out, atom(N))
 .*/
 
-%ams instruction ---------------------------------------
+%asm instruction ---------------------------------------
 genCode(Out,asmins(N)) :- !,format(Out, '\n\t~a ;', [N])
 .
 
@@ -71,6 +72,9 @@ genCode(Out, tag(N)) :- !,format(Out, '\n~a:', [N])
 .
 
 genCode(Out, vardecla(N)) :- !,format(Out, '\n\t~a: DB 0;', [N])
+.
+
+genCode(Out, stringdecla(N, V)) :- !,format(Out, '\n\t~a: DB ~a; \n\t DB 0;', [N, V])
 .
 
 %-------------------------------------------------------
