@@ -1,6 +1,9 @@
 fun main(){
 	if( 1 + 2){
-	 print("Hola_Mundo!!!");
+	 print("Paso el if");
 	}
-	print("Paso despues del if");
+	else{
+		print("Paso en else");
+	}
+
 }

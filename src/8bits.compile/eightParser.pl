@@ -64,7 +64,8 @@ assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 ifStatement(if(cond(C),body(B))) --> [if],['('], expression(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if else*/
-
+ifStatement(if(cond(C),body(B),else(E))) --> [if],['('], expression(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
+.
 /*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
 .
