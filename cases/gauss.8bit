@@ -1,0 +1,17 @@
+fun gausWhile(n)
+  let {
+     s = 0;
+	 i = n;
+  }{
+     while(i != 0){
+	    s = s + n;
+		i = i - 1;
+	 }
+	 return s;
+  }
+
+
+fun main(){
+   print_string("gauss(5)=");
+   print_boolean(gausWhile(5));
+}

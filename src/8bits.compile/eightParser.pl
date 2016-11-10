@@ -22,6 +22,9 @@ eightFunList([F|R]) --> eightFunction(F), eightFunList(R)
 eightFunction(fun(X, formals(F), body(B))) --> [fun], id(X), formals(F), ['{'], body(B), ['}']
 .
 
+eightFunction(fun(X, formals(F), body(B))) --> [fun], id(X), formals(F), body(B), ['}']
+.
+
 id(str(X)) --> [X], {atomic(X), string_chars(X, ['"'|_])}
 .
 
@@ -51,7 +54,9 @@ body([S | L]) --> statement(S), body(L)
 body([S | L]) --> ['{'],  statement(S), body(L)
 .
 
-comparison(comp(L,R, cmp(X))) --> [L], [X], [R] %  expression(L), [O],  expression(R)
+comparison(comp(L,R, cmp(X))) --> [L], [X], [R]
+.
+comparison(comp(L,R, cmp(I))) --> ['!'],['('],[L], [X], [R],[')'],{hash_inverse(X,I)}
 .
 
 statement(empty) --> [;]
@@ -162,3 +167,10 @@ operator(oper(O)) --> {member(O, ['+', '*', '-', '/']), !}
 .
 
 string_atom(S, A) :- atom_string(A, S).
+
+hash_inverse('>','<=').
+hash_inverse('>=','<').
+hash_inverse('<','>=').
+hash_inverse('<=','>').
+hash_inverse('==','!=').
+hash_inverse('!=','==').
