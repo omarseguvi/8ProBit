@@ -25,7 +25,6 @@ visit(eightProg(FL), eightProg(P)) :- !,
 																			nb_setval(sc, 0),
 																			delete_all,
 																			visitList(FL, Data, Code),
-																			show_data,
 																			append(Data, Code, P)
 .
 /*visit de main*/
@@ -61,10 +60,10 @@ prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('P
 
 prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',P,'B'),asmins('MOV',S,'A')]).
 
-epilogo([vardecla(P)],[asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
+epilogo([vardecla(P)],[asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
 
 epilogo([vardecla(P)|L],Code) :-
-								 R = [asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
+								 R = [asmins('POP','A'),asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
 								 reverse(L,L2),
 								 maplist(get_inse, L2, L3),
 								 append(L3,L4),
@@ -113,7 +112,10 @@ visit(str(X), Data, Code):- stringCounter(C)
 							, Code = [asmins('PUSH',Z)]
 .
 
-visit(cll, id(X), Code):- Code = [asmins('CALL', X),asmins('POP','A')]
+visit(cll, id(X), Code):-  fun_actual(R) = fun_actual(main), Code = [asmins('CALL', X),asmins('POP','A')]
+.
+
+visit(cll, id(X), Code):-  Code = [asmins('CALL', X)]
 .
 
 visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
@@ -121,11 +123,19 @@ visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
 							 ,append(Code1, Code2, Code)
 .
 
+visit(scll, id(X), Code):- Code = [asmins('CALL', X)]
+.
+
+visit(scll(I, A), Data, Code) :- visitList(A, Data, Code1)
+							 ,visit(scll, I, Code2)
+							 ,append(Code1, Code2, Code)
+.
+
 visit(num(X), _, Code):- Code = [asmins('PUSH', X)]
 .
 
 
-visit(return(L), _, Code) :- !, visit(L, _, Code)
+visit(return(L), Data, Code) :- !, visit(L, Data, Code)
 .
 
 
