@@ -1,0 +1,7 @@
+fun deMorgan(p, q)
+  return !(p && q) == !p || !q
+
+fun main(){
+   print_string("deMorgan(false, true)=");
+   print_boolean(deMorgan(false, true));
+}

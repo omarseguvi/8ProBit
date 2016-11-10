@@ -7,9 +7,10 @@ fun gausWhile(n)
 	    s = s + n;
 		i = i - 1;
 	 }
-	 return s;
+	 return s == gaussFormula(n);
   }
 
+fun gaussFormula(n) return n*(n+1)/2;
 
 fun main(){
    print_string("gauss(5)=");

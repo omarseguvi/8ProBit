@@ -34,37 +34,6 @@ genCode(Out, eightProg(L)) :- !,
 
 .
 
-/*
-%cambio
-genCode(Out, fun(N,F,B)) :- !,    (main,a,main_a: DB 0;)            (hello,b,hello_b: DB 0;)
-    insert_funActual(N)),
-    %format(Out, 'function ', []),
-    genCode(Out, N),
-	format(Out, ':', []),
-	genCode(Out, F),
-	genCode(Out, B)
-.
-genCode(Out, formals(L)) :- !,
-     format(Out, '(', []),
-     insert_value(L),
-     genCodeList(Out, L, ', '),
-	 format(Out, ')', [])
-.
-%cambio
-genCode(Out, body(L)) :- !,
-   format(Out, '\n', []),
-   genCodeList(Out, L, ' ')
-   %format(Out, '}', [])
-.
-genCode(Out, atom(N)) :- !, format(Out, '~a ', [N])
-.
-genCode(Out, id(N)) :- !, genCode(Out, atom(N))
-.
-genCode(Out, num(N)) :- !, genCode(Out, atom(N))
-.
-genCode(Out, oper(N)) :- !, genCode(Out, atom(N))
-.*/
-
 %asm instruction ---------------------------------------
 genCode(Out,asmins(N)) :- !, format(Out, '\n\t~a ;', [N])
 .
@@ -91,29 +60,6 @@ genCode(Out, print_number) :- !, genCodePrintN(Out)
 genCode(Out, print_boolean) :- !, genCodePrintB(Out)
 .
 
-
-
-%-------------------------------------------------------
-/*
-genCode(Out, operation(O, L, R)) :- !,
-    genCodeList(Out, [L, O, R])
-
-.
-genCode(Out, empty) :- !,  format(Out, '; ', [])
-.
-genCode(Out, assign(I, E)) :-  !,
-   genCode(Out, operation(oper('='), I, E))
-
-.
-%cambios
-genCode(Out, amsList(L)) :-  !,
-	 genCodeList(Out, L)
-
-.
-genCode(Out, return(E)) :- !, format(Out, 'return ', []),
-                              genCode(Out, E)
-.
-*/
 genCode(_, E ) :- throw(E).
 
 genCodeList(Out, L) :- genCodeList(Out, L, ' ')
