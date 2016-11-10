@@ -85,9 +85,13 @@ assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 /*Regla para la llamada de funciones */
 callStatement(cll(X,S)) --> id(X), args(S)
 .
+scall(scll(X,S)) --> id(X), args(S)
+.
 args(S) --> ['('], argsList(S), [')']
 .
 argsList([]), [')'] --> [')']
+.
+argsList([I]) --> scall(I), argsList([])
 .
 argsList([I]) --> expression(I), argsList([])
 .
