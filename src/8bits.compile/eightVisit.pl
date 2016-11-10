@@ -104,6 +104,10 @@ visit(let(S), Data, Code) :- !, visitList(S,Data,Code)
 
 visit(id(X), _, Code):- get_id(X,V),Code = [asmins('PUSH', V)]
 .
+visit(id(true), _, Code):- Code = [asmins('PUSH', 1)]
+.
+visit(id(false), _, Code):- Code = [asmins('PUSH', 0)]
+.
 
 visit(str(X), Data, Code):- stringCounter(C)
 							, fun_actual(FA)
@@ -122,6 +126,23 @@ visit(cll, id(X), Code):-  Code = [asmins('CALL', X)]
 visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
 							 ,visit(cll, I, Code2)
 							 ,append(Code1, Code2, Code)
+.
+
+visit(if(C,ifbody(B),else(E)),Data,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
+																						visit(B,_,Code3),
+																						Code4 = [asmins('JMP','return'),tag(out)],
+																						visit(E,_,Code5),
+																						append([Code1,Code2,Code3,Code4,Code5,[tag(return)]],Code)
+.
+/*hay que ver porque solo agarra dos id*/
+visit(comp(X,Y,cmp(C)),_,Code):-    getVarName(X,X1),
+                                    getVarName(Y, Y1),
+                                    hash_comp(C,C1),
+                                    Code = [asmins('PUSH',X1),asmins('PUSH',Y1)
+                                            ,asmins('POP','B'),asmins('POP','A')
+                                            ,asmins('CMP','A','B'),asmins(C1,'out')]
+.
+getVarName(X, Y) :- atom_number(X, _) -> Y = X; get_id(X,Y)
 .
 
 visit(scll, id(X), Code):- Code = [asmins('CALL', X)]
@@ -156,14 +177,14 @@ visit(oper(X), _, Code) :- !, Code1 = [asmins('POP','B'),asmins('POP','A')]
 visit(+, _, Code) :- Code = [asmins('ADD','A','B'),asmins('PUSH','A')]
 .
 
-visit(*, _, Code) :- Code = [asmins('MUL','A'),asmins('PUSH','A')]
+visit(*, _, Code) :- Code = [asmins('MUL','B'),asmins('PUSH','A')]
 .
 
 
 visit(-, _, Code) :- Code = [asmins('SUB','A','B'),asmins('PUSH','A')]
 .
 
-visit('/', _, Code) :- Code = [asmins('DIV','A'),asmins('PUSH','A')]
+visit('/', _, Code) :- Code = [asmins('DIV','B'),asmins('PUSH','A')]
 .
 
 visit(empty, _, _)
@@ -185,7 +206,7 @@ visitList( [X, Y | L], Data, Code) :- visit(X, Data1, Code1)
 visit(assing, id(X), Data, Code) :- insert_value(X),
 																		get_id(X,V),
 																		Data = [vardecla(V)],
-														        Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
+														        Code = [asmins('POP', 'A'), asmins('MOV', V, 'A')]
 .
 
 stringCounter(Z) :-  nb_getval(sc, Z)
