@@ -64,7 +64,7 @@ statement(S) --> whileStatement(S)
 .
 
 /*Regla para el let*/
-letStatement(let(S)) --> [let], ['{'], assignStatementList(S),['}']
+letStatement(let(S)) -->  [let], ['{'], assignStatementList(S),['}']
 .
 assignStatementList([]), ['}'] --> ['}']
 .

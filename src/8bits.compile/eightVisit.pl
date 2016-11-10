@@ -94,7 +94,7 @@ visit(body(X), Data, Code) :- !,  visitList(X, Data, Code)
 .
 
 visit(assign(L, R), Data, Code) :- !,visit(R, Data1, Code1)
-																		,visit(assing, L, Data2 ,Code2)
+													,visit(assing, L, Data2 ,Code2)
 									                  ,append(Code1,Code2,Code)
 									                  ,append(Data1,Data2,Data)
 .
@@ -192,3 +192,11 @@ stringCounter(Z) :-  nb_getval(sc, Z)
 					, Z1 is Z + 1
 					, nb_setval(sc,Z1)
 .
+
+
+hash_comp('>','JBE').
+hash_comp('>=','JB').
+hash_comp('<','JAE').
+hash_comp('<=','JA').
+hash_comp('==','JE').
+hash_comp('!=','JNE').
