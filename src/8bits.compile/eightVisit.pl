@@ -58,7 +58,7 @@ prologo([vardecla(P)],[asmins('POP','C'),asmins('PUSH',P),asmins('MOV',P,'C')]).
 
 prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',S,'A')]).
 
-prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',P,'B'),asmins('MOV',S,'A')]).
+prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',T,'B'),asmins('MOV',S,'A')]).
 
 epilogo([vardecla(P)],[asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
 
