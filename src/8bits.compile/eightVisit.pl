@@ -187,6 +187,13 @@ visit(-, _, Code) :- Code = [asmins('SUB','A','B'),asmins('PUSH','A')]
 visit('/', _, Code) :- Code = [asmins('DIV','B'),asmins('PUSH','A')]
 .
 
+visit(while(C, B), _,Code ) :- Code1 = [tag('while')]
+							  ,visit(C, _, Code2)
+							  ,visit(B, _, Code3)
+							  ,Code4 = [asmins('JMP', 'while'),tag('out')]
+							  ,append([Code1, Code2,Code3,  Code4], Code)
+.
+
 visit(empty, _, _)
 .
 visit(C,_, Code):- concat('--->',C,Y), Code = [tag(Y)]

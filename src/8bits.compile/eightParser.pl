@@ -41,7 +41,14 @@ idList([I, J | L]) --> id(I), [','], id(J), idList(L)
 
 body([]), ['}'] --> ['}']
 .
+
+body([]), ['}'] --> ['}'], ['}']
+.
+
 body([S | L]) --> statement(S), body(L)
+.
+
+body([S | L]) --> ['{'],  statement(S), body(L)
 .
 
 comparison(comp(L,R, cmp(X))) --> [L], [X], [R] %  expression(L), [O],  expression(R)
