@@ -5,6 +5,7 @@ dynamic prt/1.
 :-['eightParser']
 .
 
+:- discontiguous visit/3.
 
 delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)).
 
@@ -68,10 +69,10 @@ prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('P
 
 prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',T,'B'),asmins('MOV',S,'A')]).
 
-epilogo([vardecla(P)],[asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
+epilogo([vardecla(P)],[tag(epilogo),asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
 
 epilogo([vardecla(P)|L],Code) :-
-								 R = [asmins('POP','A'),asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
+								 R = [tag(epilogo),asmins('POP','A'),asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
 								 reverse(L,L2),
 								 maplist(get_inse, L2, L3),
 								 append(L3,L4),
@@ -100,7 +101,7 @@ visit(body(X), Data, Code) :- !,  visitList(X, Data, Code)
 .
 
 visit(assign(L, R), Data, Code) :- !,visit(R, Data1, Code1)
-																		,visit(assing, L, Data2 ,Code2)
+													,visit(assing, L, Data2 ,Code2)
 									                  ,append(Code1,Code2,Code)
 									                  ,append(Data1,Data2,Data)
 .
@@ -110,21 +111,23 @@ visit(let(S), Data, Code) :- !, visitList(S,Data,Code)
 
 visit(id(X), _, Code):- get_id(X,V),Code = [asmins('PUSH', V)]
 .
+visit(id(true), _, Code):- Code = [asmins('PUSH', 1)]
+.
+visit(id(false), _, Code):- Code = [asmins('PUSH', 0)]
+.
 
 visit(str(X), Data, Code):- stringCounter(C)
-							% funActual(FA)  aquie debe de ir el predicado para obetern nombre de funcion actual
 							, fun_actual(FA)
-							,concat(FA, '_String', N)
+							,concat(FA, '_string', N)
 							,concat(N, C, Z)
 							, Data = [stringdecla(Z, X)]
 							, Code = [asmins('PUSH',Z)]
 .
 
-visit(cll, id(X), Code):- fun_actual(R) = fun_actual(main),
+visit(cll, id(X), Code):- fun_actual(R), R = main,
 						  forall(member(X, ['print_number','print_string','print_boolean']),insert_prints(X)),
 						  Code = [asmins('CALL', X),asmins('POP','A')]
 .
-
 visit(cll, id(X), Code):- forall(member(X, ['print_string','print_number','print_boolean']), insert_prints(X)),
  						  Code = [asmins('CALL', X)]
 .
@@ -132,6 +135,29 @@ visit(cll, id(X), Code):- forall(member(X, ['print_string','print_number','print
 visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
 							 ,visit(cll, I, Code2)
 							 ,append(Code1, Code2, Code)
+.
+
+visit(if(C,ifbody(B)),_,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
+																						visit(B,_,Code3),
+																						Code4 = [asmins('JMP','return'),tag(out)],
+																						append([Code1,Code2,Code4,Code3,[tag(return)]],Code)
+.
+
+visit(if(C,ifbody(B),else(E)),_,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
+																						visit(B,_,Code3),
+																						Code4 = [asmins('JMP','return'),tag(out)],
+																						visit(E,_,Code5),
+																						append([Code1,Code2,Code3,Code4,Code5,[tag(return)]],Code)
+.
+/*hay que ver porque solo agarra dos id*/
+visit(comp(X,Y,cmp(C)),_,Code):-    getVarName(X,X1),
+                                    getVarName(Y, Y1),
+                                    hash_comp(C,C1),
+                                    Code = [asmins('PUSH',X1),asmins('PUSH',Y1)
+                                            ,asmins('POP','B'),asmins('POP','A')
+                                            ,asmins('CMP','A','B'),asmins(C1,'out')]
+.
+getVarName(X, Y) :- atom_number(X, _) -> Y = X; get_id(X,Y)
 .
 
 visit(scll, id(X), Code):- Code = [asmins('CALL', X)]
@@ -146,7 +172,8 @@ visit(num(X), _, Code):- Code = [asmins('PUSH', X)]
 .
 
 
-visit(return(L), Data, Code) :- !, visit(L, Data, Code)
+visit(return(L), Data, Code) :- !,visit(L, Data, Code1), Code2 = [asmins('JMP',epilogo)],
+																												 append(Code1,Code2,Code)
 .
 
 
@@ -166,14 +193,21 @@ visit(oper(X), _, Code) :- !, Code1 = [asmins('POP','B'),asmins('POP','A')]
 visit(+, _, Code) :- Code = [asmins('ADD','A','B'),asmins('PUSH','A')]
 .
 
-visit(*, _, Code) :- Code = [asmins('MUL','A'),asmins('PUSH','A')]
+visit(*, _, Code) :- Code = [asmins('MUL','B'),asmins('PUSH','A')]
 .
 
 
 visit(-, _, Code) :- Code = [asmins('SUB','A','B'),asmins('PUSH','A')]
 .
 
-visit('/', _, Code) :- Code = [asmins('DIV','A'),asmins('PUSH','A')]
+visit('/', _, Code) :- Code = [asmins('DIV','B'),asmins('PUSH','A')]
+.
+
+visit(while(C, B), _,Code ) :- Code1 = [tag('while')]
+							  ,visit(C, _, Code2)
+							  ,visit(B, _, Code3)
+							  ,Code4 = [asmins('JMP', 'while'),tag('out')]
+							  ,append([Code1, Code2,Code3,  Code4], Code)
 .
 
 visit(empty, _, _)
@@ -195,10 +229,18 @@ visitList( [X, Y | L], Data, Code) :- visit(X, Data1, Code1)
 visit(assing, id(X), Data, Code) :- insert_value(X),
 																		get_id(X,V),
 																		Data = [vardecla(V)],
-														        Code = [asmins('POP', 'A'), asmins('MOV', X, 'A')]
+														        Code = [asmins('POP', 'A'), asmins('MOV', V, 'A')]
 .
 
 stringCounter(Z) :-  nb_getval(sc, Z)
 					, Z1 is Z + 1
 					, nb_setval(sc,Z1)
 .
+
+
+hash_comp('>','JBE').
+hash_comp('>=','JB').
+hash_comp('<','JAE').
+hash_comp('<=','JA').
+hash_comp('==','JE').
+hash_comp('!=','JNE').

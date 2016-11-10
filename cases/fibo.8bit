@@ -1,0 +1,20 @@
+fun fibo(n)
+  let {
+     a = 1;
+	 b = 1;
+	 t = 0;
+  }{
+     while(!(n == 0)){
+	    t = a;
+		a = b;
+		b = b + t;
+		n = n - 1;
+	 }
+	 return a;
+  }
+
+
+fun main(){
+   print_string("fibo(3)=");
+   print_number(fibo(3));
+}

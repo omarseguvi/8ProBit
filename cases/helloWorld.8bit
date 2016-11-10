@@ -1,6 +1,4 @@
-fun main(x,y){
+fun main(){
 	print_string("Hello World!");
-}
-fun add(x,b){
- print("caca");
+	
 }
