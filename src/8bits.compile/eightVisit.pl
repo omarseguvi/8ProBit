@@ -1,8 +1,10 @@
 dynamic simbol/3.
 dynamic fun_actual/1.
+dynamic prt/1.
 
 :-['eightParser']
 .
+
 
 delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)).
 
@@ -14,6 +16,10 @@ insert_value(V):- fun_actual(F), atom_concat(F,'_',R),
 								  atom_concat(R,V,R1),
 								  insert_simbol(F,V,R1)
 .
+
+
+insert_prints(X) :- retractall(prt(X)), assert(prt(X))
+.
 /*get_id(V+,X-)*/
 get_id(V,X):- fun_actual(F), simbol(F,V,X).
 /*Es solo de prueba */
@@ -24,17 +30,19 @@ show_data :- findall(E,simbol(_,_,E),L), forall((member(X,L)),(write(X),nl)).
 visit(eightProg(FL), eightProg(P)) :- !,
 																			nb_setval(sc, 0),
 																			delete_all,
-																			visitList(FL, Data, Code),
+																			visitList(FL, Data, Code1),
+																			findall(E,prt(E),L),
+																			append(Code1,L,Code),
 																			append(Data, Code, P)
 .
 /*visit de main*/
 visit(fun(I, F, B), Data, Code) :-  visit(funid, I, Code1),
-																		visit(funData, I, Data1),
+									visit(funData, I, Data1),
                                     atom_string(id(main)) = atom_string(I), %intentar pasarlo al metodo compare
                                     visit(F, Data2, _),
                                     visit(B, Data3, Code2),
                                     append([Data1,Data2 ,Data3],Data),
-																		Code3 = [asmins('HLT')],
+									Code3 = [asmins('HLT')],
                                     append([Code1,Code2,Code3],Code),
 																		!
                                     %,compleFun(I, Code3, Code)
@@ -44,8 +52,8 @@ visit(fun(I, F, B), Data, Code) :- 	!, visit(funid, I, Code1)
 									,visit(funData, I, Data1)
 									,visit(F, Data2, _)
 									,visit(B, Data3, Code3)
-									,prologo(Data2,Code2)
 									,epilogo(Data2,Code4)
+									,prologo(Data2,Code2)
 									,append([Data1,Data2,Data3],Data),
 									Code5 = [asmins('RET')]
 									,append([Code1,Code2,Code3,Code4,Code5],Code)
@@ -112,10 +120,13 @@ visit(str(X), Data, Code):- stringCounter(C)
 							, Code = [asmins('PUSH',Z)]
 .
 
-visit(cll, id(X), Code):-  fun_actual(R) = fun_actual(main), Code = [asmins('CALL', X),asmins('POP','A')]
+visit(cll, id(X), Code):- fun_actual(R) = fun_actual(main),
+						  forall(member(X, ['print_number','print_string','print_boolean']),insert_prints(X)),
+						  Code = [asmins('CALL', X),asmins('POP','A')]
 .
 
-visit(cll, id(X), Code):-  Code = [asmins('CALL', X)]
+visit(cll, id(X), Code):- forall(member(X, ['print_string','print_number','print_boolean']), insert_prints(X)),
+ 						  Code = [asmins('CALL', X)]
 .
 
 visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
