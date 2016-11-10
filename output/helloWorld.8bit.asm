@@ -4,21 +4,45 @@
 	.UNDEF: DB 255;
 
 main_data: 
+	main_ra: DB 0; 
 	main_x: DB 0; 
 	main_y: DB 0; 
-	main_String0: DB "Hello World!"; 
+	main_string0: DB "Hello World!"; 
 	 DB 0; 
 add_data: 
+	add_ra: DB 0; 
 	add_x: DB 0; 
 	add_b: DB 0; 
-	add_String1: DB "caca"; 
+	add_string1: DB "caca"; 
 	 DB 0; 
 main: 
-	PUSH main_String0; 
+	PUSH main_string0; 
 	CALL print_string; 
+	POP A; 
+	HLT ; 
 add: 
-	PUSH add_String1; 
-	CALL print;
+	POP C; 
+	POP A; 
+	POP B; 
+	PUSH [add_b]; 
+	PUSH [add_x]; 
+	PUSH [add_ra]; 
+	MOV [add_ra] , C; 
+	MOV [add_b] , B; 
+	MOV [add_x] , A; 
+	PUSH add_string1; 
+	CALL print; 
+	POP A; 
+	MOV C , [add_ra]; 
+	POP B; 
+	MOV [add_ra] , B; 
+	POP B; 
+	MOV [add_b] , B; 
+	POP B; 
+	MOV [add_x] , B; 
+	PUSH A; 
+	PUSH C; 
+	RET ;
 
 	print_string:
 		POP C

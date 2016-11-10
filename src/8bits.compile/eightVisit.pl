@@ -4,6 +4,8 @@ dynamic fun_actual/1.
 :-['eightParser']
 .
 
+:- discontiguous visit/3.
+
 delete_all:- retractall(fun_actual(_)), retractall(simbol(_,_,_)).
 
 insert_funActual(N):-  retractall(fun_actual(_)), assert(fun_actual(N)).
@@ -104,15 +106,14 @@ visit(id(X), _, Code):- get_id(X,V),Code = [asmins('PUSH', V)]
 .
 
 visit(str(X), Data, Code):- stringCounter(C)
-							% funActual(FA)  aquie debe de ir el predicado para obetern nombre de funcion actual
 							, fun_actual(FA)
-							,concat(FA, '_String', N)
+							,concat(FA, '_string', N)
 							,concat(N, C, Z)
 							, Data = [stringdecla(Z, X)]
 							, Code = [asmins('PUSH',Z)]
 .
 
-visit(cll, id(X), Code):-  fun_actual(R) = fun_actual(main), Code = [asmins('CALL', X),asmins('POP','A')]
+visit(cll, id(X), Code):-  fun_actual(R) , R = 'main' , Code = [asmins('CALL', X),asmins('POP','A')]
 .
 
 visit(cll, id(X), Code):-  Code = [asmins('CALL', X)]

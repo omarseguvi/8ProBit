@@ -59,13 +59,14 @@ genCode(Out, oper(N)) :- !, genCode(Out, atom(N))
 .*/
 
 %asm instruction ---------------------------------------
-genCode(Out,asmins(N)) :- !,format(Out, '\n\t~a ;', [N])
+genCode(Out,asmins(N)) :- !, format(Out, '\n\t~a ;', [N])
 .
 
-genCode(Out,asmins(N, P1)) :- !,format(Out, '\n\t~a ~a;', [N, P1])
+genCode(Out,asmins(N, P1)) :- !,fixname(N, P1,PP1),format(Out, '\n\t~a ~a;', [N, PP1])
 .
 
-genCode(Out,asmins(N, P1, P3)) :- !,format(Out, '\n\t~a ~a , ~a;', [N, P1, P3])
+genCode(Out,asmins(N, P1, P3)) :- !,fixname(N,P1,PP1),fixname(N, P3,PP3),
+									format(Out, '\n\t~a ~a , ~a;', [N, PP1, PP3])
 .
 
 genCode(Out, tag(N)) :- !,format(Out, '\n~a:', [N])
@@ -108,6 +109,17 @@ genCodeList(Out, [X, Y | L], Sep) :- genCode(Out, X),
                                 format(Out, '~a', [Sep]),
                                 genCodeList(Out, [Y | L], Sep)
 .
+
+
+%statements para arreglar lo de []
+isVar(F,X) :- atom_length(X,L)
+		    , L > 1, \+ F = 'CALL'
+			, \+ sub_string(X, _,6, _,'string').
+
+fixname(F, X,Y) :- isVar(F, X) -> concat('[', X, X1),
+							concat(X1, ']', Y);
+							X = Y
+.			
 
 
 genCodePrintS(Out) :- !,format(Out,'\n
