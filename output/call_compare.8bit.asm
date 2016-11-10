@@ -35,10 +35,13 @@ if:
 	CMP A , B; 
 	JBE out; 
 	PUSH 1; 
+	JMP epilogo; 
 	JMP return; 
 out: 
 	PUSH 0; 
+	JMP epilogo; 
 return: 
+epilogo: 
 	POP A; 
 	MOV C , [compare_ra]; 
 	POP B; 

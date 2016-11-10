@@ -7,40 +7,58 @@
 	.false: DB "false"
 	DB 0;
 
-add_data: 
-	add_ra: DB 0; 
-	add_x: DB 0; 
-	add_y: DB 0; 
+fact_data: 
+	fact_ra: DB 0; 
+	fact_n: DB 0; 
+	fact_f: DB 0; 
 main_data: 
 	main_ra: DB 0; 
-	main_string0: DB "10+56="; 
+	main_string0: DB "fact(5)="; 
 	 DB 0; 
-add: 
+fact: 
 	POP C; 
 	POP A; 
-	POP B; 
-	PUSH [add_y]; 
-	PUSH [add_x]; 
-	PUSH [add_ra]; 
-	MOV [add_ra] , C; 
-	MOV [add_y] , B; 
-	MOV [add_x] , A; 
-	PUSH [add_x]; 
-	PUSH [add_y]; 
+	PUSH [fact_n]; 
+	PUSH [fact_ra]; 
+	MOV [fact_ra] , C; 
+	MOV [fact_n] , A; 
+	PUSH 1; 
+	POP A; 
+	MOV [fact_f] , A; 
+while: 
+	PUSH [fact_n]; 
+	PUSH 0; 
 	POP B; 
 	POP A; 
-	ADD A , B; 
+	CMP A , B; 
+	JBE out; 
+	PUSH [fact_f]; 
+	PUSH [fact_n]; 
+	POP B; 
+	POP A; 
+	MUL B; 
 	PUSH A; 
+	POP A; 
+	MOV [fact_f] , A; 
+	PUSH [fact_n]; 
+	PUSH 1; 
+	POP B; 
+	POP A; 
+	SUB A , B; 
+	PUSH A; 
+	POP A; 
+	MOV [fact_n] , A; 
+	JMP while; 
+out: 
+	PUSH [fact_f]; 
 	JMP epilogo; 
 epilogo: 
 	POP A; 
-	MOV C , [add_ra]; 
+	MOV C , [fact_ra]; 
 	POP B; 
-	MOV [add_ra] , B; 
+	MOV [fact_ra] , B; 
 	POP B; 
-	MOV [add_y] , B; 
-	POP B; 
-	MOV [add_x] , B; 
+	MOV [fact_n] , B; 
 	PUSH A; 
 	PUSH C; 
 	RET ; 
@@ -48,9 +66,8 @@ main:
 	PUSH main_string0; 
 	CALL print_string; 
 	POP A; 
-	PUSH 10; 
-	PUSH 56; 
-	CALL add; 
+	PUSH 5; 
+	CALL fact; 
 	CALL print_number; 
 	POP A; 
 	HLT ;

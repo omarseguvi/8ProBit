@@ -96,8 +96,6 @@ ifStatement(if(C,ifbody(B),else(E))) --> [if],['('], comparison(C), [')'], state
 /*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
 .
-returnStatement(return(E)) --> [return], expression(E)
-.
 /*Regla para la assignacion*/
 assignStatement(assign(L, R)) --> id(L), ['='], expression(R)
 .

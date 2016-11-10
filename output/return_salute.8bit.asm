@@ -2,6 +2,10 @@
 	MOV D, 232;
 	JMP main;
 	.UNDEF: DB 255;
+  .true: DB "true"
+	DB 0;
+	.false: DB "false"
+	DB 0;
 
 salute_data: 
 	salute_ra: DB 0; 
@@ -14,6 +18,8 @@ salute:
 	PUSH [salute_ra]; 
 	MOV [salute_ra] , C; 
 	PUSH salute_string0; 
+	JMP epilogo; 
+epilogo: 
 	POP A; 
 	MOV C , [salute_ra]; 
 	POP B; 

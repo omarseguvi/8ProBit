@@ -62,10 +62,10 @@ prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('P
 
 prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',T,'B'),asmins('MOV',S,'A')]).
 
-epilogo([vardecla(P)],[asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
+epilogo([vardecla(P)],[tag(epilogo),asmins('POP','A'),asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
 
 epilogo([vardecla(P)|L],Code) :-
-								 R = [asmins('POP','A'),asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
+								 R = [tag(epilogo),asmins('POP','A'),asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
 								 reverse(L,L2),
 								 maplist(get_inse, L2, L3),
 								 append(L3,L4),
@@ -128,6 +128,12 @@ visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
 							 ,append(Code1, Code2, Code)
 .
 
+visit(if(C,ifbody(B)),Data,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
+																						visit(B,_,Code3),
+																						Code4 = [asmins('JMP','return'),tag(out)],
+																						append([Code1,Code2,Code4,Code3,[tag(return)]],Code)
+.
+
 visit(if(C,ifbody(B),else(E)),Data,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
 																						visit(B,_,Code3),
 																						Code4 = [asmins('JMP','return'),tag(out)],
@@ -135,7 +141,7 @@ visit(if(C,ifbody(B),else(E)),Data,Code) :- Code1 = [tag(if)], visit(C,_,Code2),
 																						append([Code1,Code2,Code3,Code4,Code5,[tag(return)]],Code)
 .
 /*hay que ver porque solo agarra dos id*/
-visit(comp(X,Y,cmp(C)),_,Code):-    getVarName(X,X1),
+visit(comp(X,Y,cmp(C)),_,Code):-    getVarName(X,X1), writeln(caca),
                                     getVarName(Y, Y1),
                                     hash_comp(C,C1),
                                     Code = [asmins('PUSH',X1),asmins('PUSH',Y1)
@@ -157,7 +163,8 @@ visit(num(X), _, Code):- Code = [asmins('PUSH', X)]
 .
 
 
-visit(return(L), Data, Code) :- !, visit(L, Data, Code)
+visit(return(L), Data, Code) :- !,visit(L, Data, Code1), Code2 = [asmins('JMP',epilogo)],
+																												 append(Code1,Code2,Code)
 .
 
 
