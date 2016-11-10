@@ -28,14 +28,63 @@ visit(eightProg(FL), eightProg(P)) :- !,
 																			show_data,
 																			append(Data, Code, P)
 .
+/*visit de main*/
+visit(fun(I, F, B), Data, Code) :-  visit(funid, I, Code1),
+																		visit(funData, I, Data1),
+                                    atom_string(id(main)) = atom_string(I), %intentar pasarlo al metodo compare
+                                    visit(F, Data2, _),
+                                    visit(B, Data3, Code2),
+                                    append([Data1,Data2 ,Data3],Data),
+																		Code3 = [asmins('HLT')],
+                                    append([Code1,Code2,Code3],Code),
+																		!
+                                    %,compleFun(I, Code3, Code)
+.
+/* cuando no es main hacer prologo*/
 visit(fun(I, F, B), Data, Code) :- 	!, visit(funid, I, Code1)
 									,visit(funData, I, Data1)
 									,visit(F, Data2, _)
-									,visit(B, Data3, Code2)
-									,append([Data1,Data2,Data3],Data)
-									,append(Code1,Code2,Code)
+									,visit(B, Data3, Code3)
+									,prologo(Data2,Code2)
+									,epilogo(Data2,Code4)
+									,append([Data1,Data2,Data3],Data),
+									Code5 = [asmins('RET')]
+									,append([Code1,Code2,Code3,Code4,Code5],Code)
 									%,compleFun(I, Code3, Code)
 .
+
+%compare(atom_string(V),atom_string(V)).
+
+prologo([vardecla(P)],[asmins('POP','C'),asmins('PUSH',P),asmins('MOV',P,'C')]).
+
+prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',S,'A')]).
+
+prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',P,'B'),asmins('MOV',S,'A')]).
+/*
+POP A         ; Assumes return value on stack's top.
+MOV C, [f_ra] ; gets ra into C
+	POP B         ; restores previous ra
+	MOV [f_ra], B
+
+	POP B         ; restores previous n
+	MOV [f_n], B
+
+	PUSH A        ; pushes return value
+	PUSH C        ; pushes return address
+*/
+epilogo([vardecla(P)],[asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
+
+epilogo([vardecla(P)|L],Code) :-
+								 R = [asmins('MOV','C',P), asmins('POP','B'),asmins('MOV',P,'B')],
+								 reverse(L,L2),
+								 maplist(get_inse, L2, L3),
+								 append(L3,L4),
+								 R1 = [asmins('PUSH','A'),asmins('PUSH','C')],
+								 append([R,L4,R1],Code)
+.
+
+get_inse(vardecla(X),L) :- L = [asmins('POP', 'B'), asmins('MOV', X , 'B' )].
+
 
 visit(funData, id(X), Data) :- !, concat(X,'_data', Z)
 							   								 ,Data = [tag(Z)]
@@ -63,7 +112,7 @@ visit(assign(L, R), Data, Code) :- !,visit(R, Data1, Code1)
 visit(let(S), Data, Code) :- !, visitList(S,Data,Code)
 .
 
-visit(id(X), _, Code):- Code = [asmins('PUSH', X)]
+visit(id(X), _, Code):- get_id(X,V),Code = [asmins('PUSH', V)]
 .
 
 visit(str(X), Data, Code):- stringCounter(C)
@@ -75,7 +124,7 @@ visit(str(X), Data, Code):- stringCounter(C)
 							, Code = [asmins('PUSH',Z)]
 .
 
-visit(cll, id(X), Code):- Code = [asmins('CALL', X)]
+visit(cll, id(X), Code):- Code = [asmins('CALL', X),asmins('POP','A')]
 .
 
 visit(cll(I, A), Data, Code) :- visitList(A, Data, Code1)
