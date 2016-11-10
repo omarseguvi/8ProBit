@@ -60,18 +60,7 @@ prologo([vardecla(P)],[asmins('POP','C'),asmins('PUSH',P),asmins('MOV',P,'C')]).
 prologo([vardecla(P),vardecla(S)],[asmins('POP','C'),asmins('POP','A'),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',S,'A')]).
 
 prologo([vardecla(P),vardecla(S),vardecla(T)],[asmins('POP','C'),asmins('POP','A'),asmins('POP','B'),asmins('PUSH',T),asmins('PUSH',S),asmins('PUSH',P),asmins('MOV',P,'C'),asmins('MOV',P,'B'),asmins('MOV',S,'A')]).
-/*
-POP A         ; Assumes return value on stack's top.
-MOV C, [f_ra] ; gets ra into C
-	POP B         ; restores previous ra
-	MOV [f_ra], B
 
-	POP B         ; restores previous n
-	MOV [f_n], B
-
-	PUSH A        ; pushes return value
-	PUSH C        ; pushes return address
-*/
 epilogo([vardecla(P)],[asmins('MOV','C',P),asmins('POP','B'),asmins('MOV',P,'B'),asmins('PUSH','A'),asmins('PUSH','C')]).
 
 epilogo([vardecla(P)|L],Code) :-
