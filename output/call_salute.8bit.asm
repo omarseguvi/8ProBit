@@ -3,19 +3,36 @@
 	JMP main;
 	.UNDEF: DB 255;
 
+salute_data: 
+	salute_ra: DB 0; 
+	salute_s: DB 0; 
 main_data: 
 	main_ra: DB 0; 
-	main_x: DB 0; 
-	main_y: DB 0; 
-	main_a: DB 0; 
-	main_String0: DB "asdas"; 
+	main_String0: DB "Hello 666!"; 
 	 DB 0; 
-main: 
-	PUSH 4; 
+salute: 
+	POP C; 
 	POP A; 
-	MOV a , A; 
+	PUSH salute_s; 
+	PUSH salute_ra; 
+	MOV salute_ra , C; 
+	MOV salute_s , A; 
+	PUSH salute_s; 
+	CALL print_string; 
+	POP A; 
+	MOV C , salute_ra; 
+	POP B; 
+	MOV salute_ra , B; 
+	POP B; 
+	MOV salute_s , B; 
+	PUSH A; 
+	PUSH C; 
+	RET ; 
+main: 
 	PUSH main_String0; 
-	CALL print_string;
+	CALL salute; 
+	POP A; 
+	HLT ;
 
 	print_string:
 		POP C

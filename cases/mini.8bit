@@ -1,4 +1,6 @@
-fun main(){
-	a = 4;
+fun main(x,y){
+	let{
+		a = 4;
+	}
    print_string("asdas");
 }
