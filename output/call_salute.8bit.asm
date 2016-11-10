@@ -20,6 +20,7 @@ salute:
 	PUSH salute_s; 
 	CALL print_string; 
 	POP A; 
+	POP A; 
 	MOV C , salute_ra; 
 	POP B; 
 	MOV salute_ra , B; 
@@ -30,7 +31,7 @@ salute:
 	RET ; 
 main: 
 	PUSH main_String0; 
-	CALLX salute; 
+	CALL salute; 
 	POP A; 
 	HLT ;
 

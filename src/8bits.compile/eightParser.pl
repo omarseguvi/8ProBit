@@ -44,6 +44,9 @@ body([]), ['}'] --> ['}']
 body([S | L]) --> statement(S), body(L)
 .
 
+comparison(comp(L,R, cmp(X))) --> [L], [X], [R] %  expression(L), [O],  expression(R)
+.
+
 statement(empty) --> [;]
 .
 /*Se pone un cut porque solo una vez tiene que venir en cada función*/
@@ -68,13 +71,13 @@ assignStatementList([]), ['}'] --> ['}']
 assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 .
 /*Regla para el while*/
-whileStatement(while(cond(C),body(B))) --> [while],['('], expression(C), [')'], ['{'], body(B), ['}']
+whileStatement(while(C,body(B))) --> [while],['('], comparison(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if*/
-ifStatement(if(cond(C),body(B))) --> [if],['('], expression(C), [')'], ['{'], body(B), ['}']
+ifStatement(if(C,body(B))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] 
 .
 /*Regla para el if else*/
-ifStatement(if(cond(C),body(B),else(E))) --> [if],['('], expression(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
+ifStatement(if(C,body(B),else(E))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
 .
 /*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
@@ -100,13 +103,36 @@ argsList([I, J | L]) --> expression(I), [','], expression(J), argsList(L)
 
 expression(E) --> addExpression(E)
 .
+
+expression(E) --> subExpression(E)
+.
+
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}
 .
-addExpression(M) --> mulExpression(M)
+addExpression(M) --> mulExpression(M) 
 .
+
+addExpression(M) --> divExpression(M) 
+.
+
+subExpression(operation(oper('-'), L, R)) --> mulExpression(L), ['-'], subExpression(R), {!}
+.
+
+subExpression(M) --> mulExpression(M)
+.
+
+subExpression(M) --> divExpression(M)
+.
+
 mulExpression(operation(oper('*'), L, R)) --> factor(L), ['*'], mulExpression(R), {!}
 .
 mulExpression(F) --> factor(F)
+.
+
+divExpression(operation(oper('/'), L, R)) --> factor(L), ['/'], divExpression(R), {!}
+.
+
+divExpression(F) --> factor(F)
 .
 
 factor(E) --> ['('], expression(E), [')']
