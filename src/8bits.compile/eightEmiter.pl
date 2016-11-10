@@ -23,7 +23,12 @@ genCode(Out, eightProg(L)) :- !,
 							format(Out,'.init: \n',[]),
               format(Out,'\tMOV D, 232;\n',[]),
               format(Out,'\tJMP main;\n',[]),
-							format(Out,'\t.UNDEF: DB 255;\n',[]),
+							format(Out,'\t.UNDEF: DB 255;',[]),
+              format(Out,'
+  .true: DB "true"
+	DB 0;
+	.false: DB "false"
+	DB 0;\n',[]),
 							genCodeList(Out, L),
               genCodePrintS(Out)
 .
@@ -110,16 +115,17 @@ genCodeList(Out, [X, Y | L], Sep) :- genCode(Out, X),
                                 genCodeList(Out, [Y | L], Sep)
 .
 
-
 %statements para arreglar lo de []
 isVar(F,X) :- atom_length(X,L)
-		    , L > 1, \+ F = 'CALL'
-			, \+ sub_string(X, _,6, _,'string').
+            , L > 1, \+ F = 'CALL'
+            , \+ number(X)
+            , \+ sub_string(F, _,1, _,'J')
+            , \+ sub_string(X, _,6, _,'string').
 
 fixname(F, X,Y) :- isVar(F, X) -> concat('[', X, X1),
 							concat(X1, ']', Y);
 							X = Y
-.			
+.
 
 
 genCodePrintS(Out) :- !,format(Out,'\n

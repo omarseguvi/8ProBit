@@ -50,7 +50,7 @@ comparison(comp(L,R, cmp(X))) --> [L], [X], [R] %  expression(L), [O],  expressi
 statement(empty) --> [;]
 .
 /*Se pone un cut porque solo una vez tiene que venir en cada función*/
-statement(S) --> letStatement(S), !
+statement(S) --> letStatement(S)
 .
 statement(S) --> callStatement(S)
 .
@@ -74,15 +74,21 @@ assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 whileStatement(while(C,body(B))) --> [while],['('], comparison(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if*/
-ifStatement(if(C,body(B))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}']
+
+ifStatement(if(C,ifbody(B))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if else*/
-ifStatement(if(C,body(B),else(E))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
+ifStatement(if(C,ifbody(B),else(E))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
 .
-/*Regla del sin { }*/
-ifStatement(if(C,body(B),else(E))) --> [if],['('], comparison(C), [')'], body(B) , [else], body(E)
+/*Regla para el if sin */
+ifStatement(if(C,ifbody(B))) --> [if],['('], comparison(C), [')'], statement(B)
+.
+/*Regla del if y else sin { }*/
+ifStatement(if(C,ifbody(B),else(E))) --> [if],['('], comparison(C), [')'], statement(B), [else], statement(E)
 .
 /*Regla para el return*/
+returnStatement(return(E)) --> [return], expression(E)
+.
 returnStatement(return(E)) --> [return], expression(E)
 .
 /*Regla para la assignacion*/
@@ -126,9 +132,11 @@ subExpression(M) --> mulExpression(M)
 
 subExpression(M) --> divExpression(M)
 .
-
-mulExpression(operation(oper('*'), L, R)) --> factor(L), ['*'], mulExpression(R), {!}
+mulExpression(operation(oper('*'), L, R)) --> factor(L), ['*'], {write(R)},callStatement(R), {!}
 .
+mulExpression(operation(oper('*'), L, R)) --> factor(L), ['*'],mulExpression(R),{!}
+.
+
 mulExpression(F) --> factor(F)
 .
 
