@@ -74,10 +74,13 @@ assignStatementList([F| R]) --> assignStatement(F), [;], assignStatementList(R)
 whileStatement(while(C,body(B))) --> [while],['('], comparison(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if*/
-ifStatement(if(C,body(B))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] 
+ifStatement(if(C,body(B))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}']
 .
 /*Regla para el if else*/
 ifStatement(if(C,body(B),else(E))) --> [if],['('], comparison(C), [')'], ['{'], body(B), ['}'] , [else], ['{'], body(E), ['}']
+.
+/*Regla del sin { }*/
+ifStatement(if(C,body(B),else(E))) --> [if],['('], comparison(C), [')'], body(B) , [else], body(E)
 .
 /*Regla para el return*/
 returnStatement(return(E)) --> [return], expression(E)
@@ -109,10 +112,10 @@ expression(E) --> subExpression(E)
 
 addExpression(operation(oper('+'), L, R)) --> mulExpression(L), ['+'], addExpression(R), {!}
 .
-addExpression(M) --> mulExpression(M) 
+addExpression(M) --> mulExpression(M)
 .
 
-addExpression(M) --> divExpression(M) 
+addExpression(M) --> divExpression(M)
 .
 
 subExpression(operation(oper('-'), L, R)) --> mulExpression(L), ['-'], subExpression(R), {!}
