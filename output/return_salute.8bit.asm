@@ -5,19 +5,19 @@
 
 salute_data: 
 	salute_ra: DB 0; 
-	salute_String0: DB "Hello 666!"; 
+	salute_string0: DB "Hello 666!"; 
 	 DB 0; 
 main_data: 
 	main_ra: DB 0; 
 salute: 
 	POP C; 
-	PUSH salute_ra; 
-	MOV salute_ra , C; 
-	PUSH salute_String0; 
+	PUSH [salute_ra]; 
+	MOV [salute_ra] , C; 
+	PUSH salute_string0; 
 	POP A; 
-	MOV C , salute_ra; 
+	MOV C , [salute_ra]; 
 	POP B; 
-	MOV salute_ra , B; 
+	MOV [salute_ra] , B; 
 	PUSH A; 
 	PUSH C; 
 	RET ; 
